@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Message</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 300px; margin: 0 auto; }
+        input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+        button { padding: 10px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Send Message</h2>
+        <form id="messageForm">
+            <input type="text" id="phoneNumber" placeholder="Phone Number" required />
+            <textarea id="message" placeholder="Enter your message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <p id="responseMessage"></p>
+    </div>
+
+    <script>
+        document.getElementById('messageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const message = document.getElementById('message').value;
+
+            const responseMessage = document.getElementById('responseMessage');
+
+            try {
+                const response = await fetch('/send-message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber, message })
+                });
+
+                const data = await response.json();
+                responseMessage.innerText = data.message;
+            } catch (error) {
+                responseMessage.innerText = 'Error: ' + error.message;
+            }
+        });
+    </script>
+
+</body>
+</html>
